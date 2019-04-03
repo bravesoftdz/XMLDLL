@@ -1,0 +1,35 @@
+unit MainHome;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, jpeg, ExtCtrls, Vcl.Imaging.pngimage,Buttons, PngFunctions;
+
+type
+  TfrmMainHome = class(TForm)
+    ustOrta: TImage;
+    altOrtaImg: TImage;
+    CloseBtn: TSpeedButton;
+    yanCizgiImg: TImage;
+    sagCizgiImg: TImage;
+    procedure closeBtnClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmMainHome: TfrmMainHome;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmMainHome.closeBtnClick(Sender: TObject);
+begin
+  close;
+end;
+
+end.

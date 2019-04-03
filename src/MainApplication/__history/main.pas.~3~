@@ -1,0 +1,215 @@
+unit main;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ExtCtrls, Configuration, StdCtrls, Vcl.Imaging.pngimage, Skins,
+  MainSkinRect, volume, AppEvnts, IdBaseComponent, IdComponent,
+   System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList, Vcl.CategoryButtons, Vcl.WinXCtrls, Vcl.ComCtrls, Vcl.ToolWin;
+
+type
+
+  TMainForm = class(TForm)
+    ApplicationEvents: TApplicationEvents;
+    imlIcons: TImageList;
+    ActionList1: TActionList;
+    actHome: TAction;
+    actLayout: TAction;
+    actPower: TAction;
+    ToolBar1: TToolBar;
+    ToolButton1: TToolButton;
+    ToolButton: TToolButton;
+    tbtnHome: TToolButton;
+    Button1: TButton;
+    ToolButton2: TToolButton;
+    ToolButton3: TToolButton;
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure ApplicationEventsException(Sender: TObject; E: Exception);
+    procedure FormPaint(Sender: TObject);
+    procedure ToolButton1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure ToolButton1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure tbtnHomeMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure tbtnHomeMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure Button1Click(Sender: TObject);
+    procedure ToolButton3Click(Sender: TObject);
+  private
+    ScrWidth, ScrHeight: Integer;
+    Skin: TSkins;
+    ProcList: TStringList;
+    MainSkinsRect: TMainSkinsRect;
+    SelectedRect: TRect;
+  public
+    Settings: TSettings;
+  end;
+
+var
+  MainForm: TMainForm;
+
+implementation
+
+uses About;
+
+{$R *.dfm}
+
+function WindowsExit(RebootParam: Longword): Boolean;
+var
+  TTokenHd: THandle;
+  TTokenPvg: TTokenPrivileges;
+  cbtpPrevious: DWORD;
+  rTTokenPvg: TTokenPrivileges;
+  pcbtpPreviousRequired: DWORD;
+  tpResult: Boolean;
+const
+  SE_SHUTDOWN_NAME = 'SeShutdownPrivilege';
+begin
+  if Win32Platform = VER_PLATFORM_WIN32_NT then
+  begin
+    tpResult := OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES or TOKEN_QUERY, TTokenHd);
+    if tpResult then
+    begin
+      tpResult := LookupPrivilegeValue(nil, SE_SHUTDOWN_NAME, TTokenPvg.Privileges[0].Luid);
+      TTokenPvg.PrivilegeCount := 1;
+      TTokenPvg.Privileges[0].Attributes := SE_PRIVILEGE_ENABLED;
+      cbtpPrevious := SizeOf(rTTokenPvg);
+      pcbtpPreviousRequired := 0;
+      if tpResult then
+        Windows.AdjustTokenPrivileges(TTokenHd, False, TTokenPvg, cbtpPrevious, rTTokenPvg, pcbtpPreviousRequired);
+    end;
+  end;
+  Result := ExitWindowsEx(RebootParam, 0);
+end;
+
+function SetScreenResolution(Width, Height: Integer): Longint;
+var
+  DeviceMode: TDeviceMode;
+begin
+  try
+    with DeviceMode do
+    begin
+      dmSize := SizeOf(TDeviceMode);
+      dmPelsWidth := Width;
+      dmPelsHeight := Height;
+      dmFields := DM_PELSWIDTH or DM_PELSHEIGHT;
+    end;
+    Result := ChangeDisplaySettings(DeviceMode, CDS_UPDATEREGISTRY);
+  except
+
+  end;
+end;
+
+procedure TMainForm.FormCreate(Sender: TObject);
+begin
+  caption :=Application.Title;
+  Position:=poMainFormCenter;
+  WindowState:=wsMaximized;
+  Left := 0;
+  Top := 0;
+  ScrWidth := GetSystemMetrics(SM_CXSCREEN);
+  ScrHeight := GetSystemMetrics(SM_CYSCREEN);
+
+  SetScreenResolution(ScrWidth, ScrHeight);
+  Width := Screen.Width;
+  Height := Screen.Height;
+
+  Settings := TSettings.Create(nil);
+  Settings.GetSkinSettings;
+
+  Skin := TSkins.CreateWithSettings(nil, Settings);
+
+  MainSkinsRect := TMainSkinsRect.Create(nil);
+  MainSkinsRect.Settings := Settings;
+  //MainSkinsRect.OnClickEvent := ButtonClick;
+  MainSkinsRect.FormWidth := Width;
+  MainSkinsRect.FormHeight := Height;
+  MainSkinsRect.Skin := Skin;
+
+end;
+
+procedure DrawVert(Canvas: TCanvas; Box: TRect; const Text: string);
+var
+  i: Integer;
+  s: string;
+  R: TRect;
+begin
+  s := '';
+  for i := 1 to Length(Text) do
+    s := s + Text[i] + ' ';
+  R := Rect(0, 0, 1, 0);
+  Canvas.TextRect(R, s, [tfCalcRect, tfNoClip, tfWordBreak]);
+  Box.Left := Box.Left + (Box.Right - Box.Left - R.Right) div 2;
+  Box.Top := Box.Top + (Box.Bottom - Box.Top - R.Bottom) div 2;
+  Box.Right := Box.Left + R.Right;
+  Box.Bottom := Box.Top + R.Bottom;
+  Canvas.TextRect(Box, s, [tfWordBreak]);
+end;
+
+
+procedure TMainForm.FormPaint(Sender: TObject);
+begin
+  if Skin <> nil then
+    Skin.DrawSkinMainForm(Canvas, ClientRect, SelectedRect, 0);
+end;
+
+procedure TMainForm.tbtnHomeMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+ strBtn:string;
+begin
+  strBtn:=tbtnHome.Caption;
+  if Skin <> nil then
+    Skin.DrawSkinMainForm(Canvas, ClientRect, SelectedRect, 1);
+  Canvas.Font.Name := 'Arial';
+  Canvas.Brush.Color:=clTeal;
+  Canvas.Font.Size := 50;
+  Canvas.Font.Color := clwhite;
+  Canvas.Font.Style := [fsBold];
+  DrawVert(Canvas,ClientRect,strBtn);
+
+end;
+
+procedure TMainForm.tbtnHomeMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+      if Skin <> nil then
+    Skin.DrawSkinMainForm(Canvas, ClientRect, SelectedRect, 0);
+
+  MainSkinsRect.ButtonClick(self.Name, tbtnHome.Caption);
+end;
+
+procedure TMainForm.ToolButton1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+//
+end;
+
+procedure TMainForm.ToolButton1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  //
+end;
+
+procedure TMainForm.ToolButton3Click(Sender: TObject);
+begin
+ frmAboutBox.ShowModal;
+end;
+
+procedure TMainForm.Button1Click(Sender: TObject);
+begin
+  Mute;
+end;
+
+
+
+procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  { Skin.Free;
+    MainSkinsRect.Free;
+    Settings.Free;
+  }
+  SetScreenResolution(ScrWidth, ScrHeight);
+end;
+
+procedure TMainForm.ApplicationEventsException(Sender: TObject; E: Exception);
+begin
+  E := nil;
+end;
+
+end.
