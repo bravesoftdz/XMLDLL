@@ -1,3 +1,12 @@
+{ ============================================
+  Software Name : 	XMLDLL
+  ============================================ }
+{ ******************************************** }
+{ Written By WalWalWalides                     }
+{ CopyRight © 2019                             }
+{ Email : WalWalWalides@gmail.com              }
+{ GitHub :https://github.com/walwalwalides     }
+{ ******************************************** }
 unit Configuration;
 
 interface
@@ -70,7 +79,7 @@ begin
     ScreenHeight := Current.Items.ItemNamed['SCREEN'].Properties.IntValue('HEIGHT',800);
     SimpleXML.Free;
   end else begin
-    ShowMessage('Ayar dosyasý bulunamadý. Bu dosya olmadan program düzgün çalýþmaz.');
+    ShowMessage(QuotedStr('settings.xml')+' file not found!');
     Application.Terminate;
   end;
 end;
