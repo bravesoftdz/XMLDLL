@@ -101,15 +101,15 @@ object MainForm: TMainForm
   end
   object ApplicationEvents: TApplicationEvents
     OnException = ApplicationEventsException
-    Left = 160
-    Top = 256
+    Left = 88
+    Top = 248
   end
   object imlIcons: TImageList
     ColorDepth = cd32Bit
     Height = 32
     Width = 32
-    Left = 208
-    Top = 188
+    Left = 256
+    Top = 244
     Bitmap = {
       494C010104000900040020002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000004000000001002000000000000080
@@ -1176,8 +1176,8 @@ object MainForm: TMainForm
   end
   object ActionList1: TActionList
     Images = imlIcons
-    Left = 136
-    Top = 324
+    Left = 192
+    Top = 284
     object actHome: TAction
       Caption = 'Home'
       ImageIndex = 1
