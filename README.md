@@ -11,8 +11,8 @@
 # Features  
 
 - Generate XML File and Bind a DLL to the Main Application.
-- Managing Data Exchange and Parsing XML files.
-- Define a class to represent a Xml File in the programme.
+- Managing Data Exchange and Parsing XML Files.
+- Define a class to represent a Xml File in the Programme.
 
 
 
