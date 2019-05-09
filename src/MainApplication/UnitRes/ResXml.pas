@@ -1,3 +1,18 @@
+ { ============================================
+  Software Name : 	XMLDLL
+  ============================================ }
+{ ******************************************** }
+{ Written By WalWalWalides                     }
+{ CopyRight © 2019                             }
+{ Email : WalWalWalides@gmail.com              }
+{ GitHub :https://github.com/walwalwalides     }
+{ ******************************************** }
+
+
+
+{
+Generate  Settings.XML  to relate the Main Application with Home.DLL
+}
 unit ResXml;
 
 interface
@@ -59,6 +74,7 @@ Begin
     gvProjectHome.Button := tmpButton;
     gvProjectHome.ButtonEvt := 'ONCLICK';
     gvProjectHome.ButtonEvtValue := 'ShowNavigationForm';
+
     // int1:=gvProjectOptions.SCREEN.scrWidth;
   end;
 end;

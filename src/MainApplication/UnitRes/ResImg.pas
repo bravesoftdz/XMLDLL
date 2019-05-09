@@ -25,7 +25,7 @@ Begin
   begin
     if not DirectoryExists(sApp + FolderScreens) then
       ForceDirectories(sApp + FolderScreens);
-    CreateResImages('Main_Back', sLink);
+    CreateResImages('Main_Back', sLink);   //Generate Image from Resource
   end;
 
   sLink := '';
@@ -34,7 +34,7 @@ Begin
   begin
     if not DirectoryExists(sApp + FolderScreens) then
       ForceDirectories(sApp + FolderScreens);
-    CreateResImages('Main_Front', sLink);
+    CreateResImages('Main_Front', sLink); //Generate Image from Resource
   end;
 
   sLink := '';

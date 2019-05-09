@@ -66,7 +66,7 @@ begin
   inherited Create(AOwner);
   PluginList:= TPluginList.Create(nil);
   ButtonList:= TList.Create;
-  path := ExtractFilePath(ParamStr(0))+'System\settings.xml';
+  path := ExtractFilePath(ParamStr(0))+'System\settings.xml';  //load parametre from Setting.Xml
   if FileExists(path) then
   begin
     SimpleXML := TJvSimpleXML.Create(nil);
@@ -105,7 +105,7 @@ var
   ButtonPosition: TButtonPosition;
   i,a: integer;
 begin
-  path := SkinPath+'\skin.xml';
+  path := SkinPath+'\skin.xml';  //Load Prametre from Skin.Xml
   if FileExists(path) then
   begin
     SimpleXML  := TJvSimpleXML.Create(nil);

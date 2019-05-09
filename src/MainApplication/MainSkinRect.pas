@@ -67,12 +67,6 @@ end;
 
 
 
-
-
-
-
-
-
 procedure TMainSkinsRect.ButtonClick(FormName,Text: string);//
 var
   PluginName,eventName,callFunction,caption: string;
@@ -128,7 +122,7 @@ begin
      @DLLFunc := GetProcAddress(DLLHandle,Pansichar(proc));
      Form     := DLLFunc;
      FSettings.PluginList.SetPluginForm(PluginName, Form);
-     Form.Show;
+     Form.Show;                    //Call Home DLL
 
     finally
 
